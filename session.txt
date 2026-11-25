@@ -1,42 +1,0 @@
-Script started on 2026-11-25 03:36:52+00:00 [TERM="linux" TTY="/dev/tty1" COLUMNS="160" LINES="50"]
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ pwd
-[?2004l/home/mayemi/ShellDoc_Web
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ whoami
-[?2004lmayemi
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ date
-[?2004lmié 25 nov 2026 03:37:47 UTC
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ hostnae[Kme
-[?2004lubuntu-server
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ uname -a
-[?2004lLinux ubuntu-server 7.0.0-42-generic #42-Ubuntu SMP PREEMPT_DYNAMIC Thu Oct 15 08:06:44 UTC 2026 x86_64 GNU/Linux
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ md[Kkdir -p prueba_linux
-[?2004l[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ ñ[Kls
-[?2004l[0m[01;34mprueba_linux[0m  session.txt
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ l*[Ks -l
-[?2004ltotal 4
-drwxrwxr-x 2 mayemi mayemi 4096 Nov 25 03:38 [0m[01;34mprueba_linux[0m
--rw-rw-r-- 1 mayemi mayemi    0 Nov 25 03:36 session.txt
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ ps
-[?2004l    PID TTY          TIME CMD
-   1520 pts/0    00:00:00 bash
-   1534 pts/0    00:00:00 ps
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ free -h
-[?2004l               total        used        free      shared  buff/cache   available
-Mem:           3,3Gi       454Mi       2,4Gi       1,0Mi       624Mi       2,8Gi
-Swap:          2,0Gi          0B       2,0Gi
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ df h[K-h
-[?2004lFilesystem                         Size  Used Avail Use% Mounted on
-tmpfs                              671M  1,1M  670M   1% /run
-/dev/mapper/ubuntu--vg-ubuntu--lv   12G  5,7G  5,0G  54% /
-tmpfs                              1,7G     0  1,7G   0% /dev/shm
-none                               1,0M     0  1,0M   0% /run/credentials/systemd-journald.service
-tmpfs                              1,7G     0  1,7G   0% /tmp
-none                               1,0M     0  1,0M   0% /run/credentials/systemd-resolved.service
-/dev/sda2                          2,0G  187M  1,7G  11% /boot
-none                               1,0M     0  1,0M   0% /run/credentials/systemd-networkd.service
-none                               1,0M     0  1,0M   0% /run/credentials/getty@tty1.service
-tmpfs                              336M  8,0K  336M   1% /run/user/1000
-[?2004hmayemi@ubuntu-server:~/ShellDoc_Web$ exit
-[?2004lexit
-
-Script done on 2026-11-25 03:40:00+00:00 [COMMAND_EXIT_CODE="0"]
