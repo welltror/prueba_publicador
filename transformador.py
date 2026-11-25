@@ -100,6 +100,9 @@ def leer_y_separar_sesion(ruta_sesion="session.txt"):
         while len(item["salida"]) > 0 and item["salida"][-1].strip() == "":
             item["salida"].pop()
 
+    if comandos and comandos[-1]["comando"] == "exit":
+        comandos.pop()
+
     return comandos
 
 
