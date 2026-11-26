@@ -3,7 +3,8 @@ from coordinador import ejecutar_sistema
 
 
 def main():
-    exito = ejecutar_sistema()
+    incluir_publicador = "--sin-publicador" not in sys.argv
+    exito = ejecutar_sistema(incluir_publicador=incluir_publicador)
 
     if exito:
         print("[MAIN] Proceso finalizado sin errores.")
