@@ -1,9 +1,10 @@
+import os
 import threading
 import time
-import os
 
 semaforo_transformacion = threading.Semaphore(0)
 semaforo_renderizacion = threading.Semaphore(0)
+semaforo_publicacion = threading.Semaphore(0)
 
 evento_error = threading.Event()
 evento_detener = threading.Event()
@@ -38,12 +39,23 @@ def esperar_semaforo(semaforo, nombre, quien):
     return True
 
 
+def _llamar_transformador():
+    import transformador
+
+    if hasattr(transformador, "transformar_sesion"):
+        return transformador.transformar_sesion()
+    if hasattr(transformador, "transformar_sesion_a_qmd"):
+        return transformador.transformar_sesion_a_qmd()
+    raise AttributeError(
+        "transformador.py no define 'transformar_sesion' ni 'transformar_sesion_a_qmd'."
+    )
+
+
 def hilo_transformador():
     nombre = "HILO 1 - TRANSFORMADOR"
     try:
         mostrar_estado(nombre, "Iniciando transformacion...")
-        from transformador import transformar_sesion
-        transformar_sesion()
+        _llamar_transformador()
 
         if evento_error.is_set():
             return
@@ -72,6 +84,7 @@ def hilo_renderizador():
             raise FileNotFoundError("No existe presentacion.qmd")
 
         from renderizador import renderizar_presentacion
+
         renderizar_presentacion()
 
         if evento_error.is_set():
@@ -81,8 +94,9 @@ def hilo_renderizador():
             raise FileNotFoundError("No se genero presentacion.html")
 
         mostrar_estado(nombre, "Renderizacion completada correctamente.")
-        mostrar_estado(nombre, "Liberando semaforo de renderizacion (signal).")
+        mostrar_estado(nombre, "Liberando semaforos de renderizacion y publicacion (signal).")
         semaforo_renderizacion.release()
+        semaforo_publicacion.release()
     except Exception as e:
         registrar_error(nombre, str(e))
 
@@ -97,13 +111,38 @@ def hilo_servidor():
 
         mostrar_estado(nombre, "Iniciando servidor web...")
         from servidor import iniciar_servidor
+
         iniciar_servidor(evento_detener)
         mostrar_estado(nombre, "Servidor finalizado.")
     except Exception as e:
         registrar_error(nombre, str(e))
 
 
-def ejecutar_sistema():
+def hilo_publicador():
+    nombre = "HILO 4 - PUBLICADOR"
+    try:
+        mostrar_estado(nombre, "Esperando al HILO 2 para publicar (wait)...")
+
+        if not esperar_semaforo(semaforo_publicacion, nombre, "HILO 2"):
+            return
+
+        if evento_error.is_set() or evento_detener.is_set():
+            mostrar_estado(nombre, "Publicacion cancelada por estado del sistema.")
+            return
+
+        if not os.path.isfile("presentacion.html"):
+            raise FileNotFoundError("No existe presentacion.html para publicar.")
+
+        mostrar_estado(nombre, "Iniciando publicacion en GitHub Pages...")
+        from publicador import publicar_presentacion
+
+        publicar_presentacion()
+        mostrar_estado(nombre, "Publicacion completada correctamente.")
+    except Exception as e:
+        registrar_error(nombre, str(e))
+
+
+def ejecutar_sistema(incluir_publicador=True):
     print("=== SHELLDOC WEB ===")
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -116,6 +155,10 @@ def ejecutar_sistema():
     hilo2 = threading.Thread(target=hilo_renderizador, name="HILO 2")
     hilo3 = threading.Thread(target=hilo_servidor, name="HILO 3")
     hilos = [hilo1, hilo2, hilo3]
+
+    if incluir_publicador:
+        hilo4 = threading.Thread(target=hilo_publicador, name="HILO 4")
+        hilos.append(hilo4)
 
     for hilo in hilos:
         hilo.start()
